@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">My Dict</string>
+    <string name="title_activity_main">Kamus Fauna (Kelompok 3)</string>
+    <string name="judul">Kamus Fauna</string>
+    <string name="label_nama_binatang">Nama Hewan</string>
+    <string name="label_nama_latin">Nama latin</string>
+    <string name="titik_dua">:</string>
+    <string name="button_cari_latin">Cari latin</string>
+
+    <string name="hint_input_nama_binatang">Masukkan nama binatang</string>
+</resources>

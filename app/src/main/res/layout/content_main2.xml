@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="50dp"
+    android:paddingLeft="32dp"
+    android:paddingRight="32dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+                android:text="@string/label_nama_binatang"
+                android:layout_weight="1"
+                android:layout_marginRight="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/label1" android:textSize="18sp"/>
+        <ImageButton
+                android:background="@drawable/ic_swap_horiz_black_24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/b_switch"/>
+
+        <TextView
+                android:text="@string/label_nama_latin"
+                android:layout_marginLeft="16dp"
+                android:gravity="end"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/label2" android:textSize="18sp"/>
+    </LinearLayout>
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:autofillHints="@string/hint_input_nama_binatang"
+            android:layout_marginTop="16dp"
+            android:id="@+id/input_search"/>
+    <android.support.v7.widget.RecyclerView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_marginTop="16dp"
+          android:id="@+id/recycler">
+
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>
