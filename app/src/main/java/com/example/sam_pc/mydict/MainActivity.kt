@@ -2,6 +2,7 @@ package com.example.sam_pc.mydict
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -18,11 +19,11 @@ import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.sdk27.coroutines.textChangedListener
 
 class MainActivity : AppCompatActivity() {
-    private var mode: Int = 1;
+    private var mode: Int = 1
     private lateinit var adp: item_list_adapter
-    private var res: MutableList<kamus> = mutableListOf()
+    private val res: MutableList<kamus> = mutableListOf()
+    private lateinit var mp: MediaPlayer
 
-    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         val isFirstTime = getPreferences(Context.MODE_PRIVATE).getBoolean("isFirstRun", true)
 
@@ -37,6 +38,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        mp = MediaPlayer.create (this, R.raw.blop)
+
         if (isFirstTime) {
             getPreferences(Context.MODE_PRIVATE).edit().putBoolean("isFirstRun", false).apply()
             migrateDatabase()
@@ -47,20 +50,11 @@ class MainActivity : AppCompatActivity() {
         getKamus()
         input_search.textChangedListener {
             afterTextChanged {
-                val temp: Collection<kamus>
-
-                if (mode == 1)
-                    temp = res.filter {
-                        it.nama_hewan.decapitalize().contains(input_search.text.toString().decapitalize())
-                    }
-                else
-                    temp = res.filter {
-                        it.nama_latin.decapitalize().contains(input_search.text.toString().decapitalize())
-                    }
-                adp = item_list_adapter(mode,temp)
-                recycler.adapter = adp
+                updateAdp()
+                playSound()
             }
         }
+
         b_switch.onClick {
             mode = (mode+1)%2
             if (mode == 1) {
@@ -70,16 +64,37 @@ class MainActivity : AppCompatActivity() {
                 label1.text = resources.getString(R.string.label_nama_latin)
                 label2.text = resources.getString(R.string.label_nama_binatang)
             }
-            var temp = res.filter {
-                it.nama_hewan.contains(input_search.text.toString())
-            }
-            adp = item_list_adapter(mode,temp)
-            recycler.adapter = adp
+            updateAdp()
+            playSound()
         }
 
     }
 
-    fun getKamus(){
+    private fun playSound(){
+        if (mp.isPlaying) {
+            mp.pause()
+        }
+        mp.seekTo(0)
+        mp.start()
+    }
+
+    private fun updateAdp(){
+        val temp: Collection<kamus>
+
+        if (mode == 1)
+            temp = res.filter {
+                it.nama_hewan.decapitalize().contains(input_search.text.toString().decapitalize())
+
+            }
+        else
+            temp = res.filter {
+                it.nama_latin.decapitalize().contains(input_search.text.toString().decapitalize())
+            }
+        adp = item_list_adapter(mode,temp)
+        recycler.adapter = adp
+    }
+
+    private fun getKamus(){
         val res2 = database.use {
             select(kamus.KAMUS).parseList(classParser<kamus>())
         }
@@ -88,7 +103,7 @@ class MainActivity : AppCompatActivity() {
         adp.notifyDataSetChanged()
     }
 
-    fun migrateDatabase(){
+    private fun migrateDatabase(){
         applicationContext.assets.open("databasenamalatinfauna.csv").bufferedReader().use {
             val iterator = it.lineSequence().iterator()
             while(iterator.hasNext()) {
